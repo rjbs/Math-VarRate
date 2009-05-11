@@ -6,6 +6,17 @@ package Math::VarRate;
 use Carp ();
 use Scalar::Util ();
 
+=head1 DESCRIPTION
+
+Math::VarRate is a very, very poor man's calculus.  A Math::VarRate object
+represents an accumulator that increases at a varying rate over time.  The rate
+may change, it is always a linear, positive rate of change.
+
+You can imagine the rate as representing "units gained per time."  You can then
+interrogate the Math::VarRate object for the total units accumulated at any
+given offset in time, or for the time at which a given number of units will
+have first been accumulated.
+
 =method new
 
   my $varrate = Math::VarRate->new(\%arg);
@@ -127,10 +138,8 @@ sub _precompute_offsets {
   my $value   = $self->starting_value;
   my $v_at_o  = {};
   my %changes = %{ $self->{rate_changes} };
-  
-  my @points = sort { $a <=> $b } keys %changes;
-  my $prev   = 0;
-  my $rate   = 0;
+  my $prev    = 0;
+  my $rate    = 0;
 
   for my $offset (sort { $a <=> $b } keys %changes) {
     my $duration = $offset - $prev;
