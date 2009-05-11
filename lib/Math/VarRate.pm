@@ -1,9 +1,20 @@
 use strict;
 use warnings;
 package Math::VarRate;
+# ABSTRACT: deal with linear, variable rates of increase
 
 use Carp ();
 use Scalar::Util ();
+
+=method new
+
+  my $varrate = Math::VarRate->new(\%arg);
+
+Valid arguments to C<new> are:
+
+  rate_changes - a hashref in which keys are offsets and values are rates
+
+=cut
 
 sub new {
   my ($class, $arg) = @_;
@@ -32,10 +43,32 @@ sub _sanity_check_rate_changes {
   }
 }
 
+=method starting_value
+
+The starting value of the accumulator.  At present, it is fixed at zero and
+non-zero starting values have not been tested.
+
+=cut
+
 sub starting_value { 0 }
+
+=method offset_for
+
+  my $offset = $varrate->offset_for($value);
+
+This method returns the offset (positive, from 0) at which the given value is
+reached.  If the given value will never be reached, undef will be returned.
+
+=cut
 
 sub offset_for {
   my ($self, $value) = @_;
+
+  Carp::croak("illegal value: non-numeric")
+    unless Scalar::Util::looks_like_number($value);
+
+  Carp::croak("illegal value: negative") unless $value >= 0;
+
   $value += 0;
 
   return 0 if $value == $self->starting_value;
@@ -44,7 +77,9 @@ sub offset_for {
   my ($offset) = sort { $b <=> $a } grep { $ko->{ $_ } < $value } keys %$ko;
 
   my $rate     = $self->{rate_changes}{ $offset };
-  return unless $rate != 0;
+
+  # If we stopped for good, we can never reach the target. -- rjbs, 2009-05-11
+  return undef if $rate == 0;
 
   my $to_go    = $value - $ko->{ $offset };
   my $dur      = $to_go / $rate;
@@ -52,8 +87,22 @@ sub offset_for {
   return $offset + $dur;
 }
 
+=method value_at
+
+  my $value = $varrate->value_at($offset);
+
+This returns the value in the accumulator at the given offset.
+
+=cut
+
 sub value_at {
   my ($self, $offset) = @_;
+
+  Carp::croak("illegal offset: non-numeric")
+    unless Scalar::Util::looks_like_number($offset);
+
+  Carp::croak("illegal offset: negative") unless $offset >= 0;
+
   $offset += 0;
 
   my $known_offsets = $self->{known_offsets};
