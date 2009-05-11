@@ -4,9 +4,9 @@ use warnings;
 use Test::More 'no_plan';
 
 # Setup:
-# in Reference, constant rate of 1
-# in Alpha,     rate of 1 from 0 to 100, 2   from 100 to 200, 1.5 from 200 on
-# in Beta,      rate of 1 from 0 to 100, 0.5 from 100 to 175, 1   from 175 on
+#   in Ref,   constant rate of 1
+#   in Alpha, rate of 1 from 0 to 100, 2   from 100 to 200, 1.5 from 200 on
+#   in Beta,  rate of 1 from 0 to 100, 0.5 from 100 to 175, 1   from 175 on
 
 use Math::VarRate;
 
@@ -73,3 +73,6 @@ is($stopper->offset_for(1),  11, "stopper: we reach 1 at 11");
 is($stopper->offset_for(10), 20, "stopper: we reach 10 at 20");
 is($stopper->offset_for(11), undef, "stopper: we never reach 11");
 
+my $stagnant = Math::VarRate->new;
+is($stagnant->offset_for(0),    0, "stagnant: starts at 0");
+is($stagnant->value_at(10_000), 0, "stagnant: never moves");

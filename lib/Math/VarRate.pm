@@ -19,7 +19,8 @@ Valid arguments to C<new> are:
 sub new {
   my ($class, $arg) = @_;
 
-  my $self = bless { rate_changes => $arg->{rate_changes} }  => $class;
+  my $changes = $arg->{rate_changes} || {};
+  my $self = bless { rate_changes => $changes }  => $class;
 
   $self->_sanity_check_rate_changes;
   $self->_precompute_offsets;
@@ -125,7 +126,7 @@ sub __initial_compute_value_at {
   my ($self, $offset) = @_;
 
   my $value   = $self->starting_value;
-  my %changes = %{ $self->{rate_changes} || {} };
+  my %changes = %{ $self->{rate_changes} };
 
   my @points = sort { $a <=> $b } grep { $_ < $offset } keys %changes;
 
@@ -145,7 +146,7 @@ sub _precompute_offsets {
   my ($self) = @_;
 
   my $value   = {};
-  my %changes = %{ $self->{rate_changes} || {} };
+  my %changes = %{ $self->{rate_changes} };
   
   for my $offset (keys %changes) {
     $value->{ $offset } = $self->value_at( $offset );
