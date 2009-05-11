@@ -54,3 +54,16 @@ is(
 is($meter{ref}->offset_for(300),    300, "ref meter: 300 at 300 (value_at)");
 is($meter{alpha}->offset_for(450),  300, "ref meter: 450 at 300 (value_at)");
 is($meter{beta}->offset_for(262.5), 300, "ref meter: 262.5 at 300 (value_at)");
+
+my $stopper = Math::VarRate->new({
+  rate_changes => {
+    10 => 1,
+    20 => 0,
+  },
+});
+
+is($stopper->value_at(0),  0,  "stopper: start at 0");
+is($stopper->value_at(5),  0,  "stopper: still 0 at 5");
+is($stopper->value_at(10), 0,  "stopper: still 0 at 10");
+is($stopper->value_at(11), 1,  "stopper: after 11, value is 1");
+is($stopper->value_at(25), 10, "stopper: after 25, value stopped at 10");

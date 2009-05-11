@@ -39,6 +39,8 @@ sub value_at {
 
   my ($max) = sort { $b <=> $a } grep { $_ < $offset } keys %$known_offsets;
 
+  return $self->starting_value unless defined $max;
+
   my $start = $known_offsets->{ $max };
   my $rate  = $self->{rate_changes}{ $max };
   my $dur   = $offset - $max;
