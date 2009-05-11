@@ -11,17 +11,17 @@ use Test::More 'no_plan';
 use Math::VarRate;
 
 my %meter = (
-  reference => Math::VarRate->new({ starting_rate => 1 }),
-  alpha     => Math::VarRate->new({
-    starting_rate => 1,
-    rate_changes  => [
+  ref   => Math::VarRate->new({ rate_changes => [ 0 => 1 ] }),
+  alpha => Math::VarRate->new({
+    rate_changes => [
+      0   => 1,
       100 => 2.0,
       200 => 1.5,
     ],
   }),
-  beta      => Math::VarRate->new({
-    starting_rate => 1,
-    rate_changes  => [
+  beta  => Math::VarRate->new({
+    rate_changes => [
+      0   => 1,
       100 => 0.5,
       175 => 1,
     ],
@@ -29,3 +29,5 @@ my %meter = (
 );
 
 isa_ok($meter{$_}, 'Math::VarRate') for keys %meter;
+
+is($meter{$_}->value_at(0), 0, "start $_ meter at 0") for keys %meter;
