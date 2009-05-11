@@ -68,6 +68,8 @@ is($stopper->value_at(10), 0,  "stopper: still 0 at 10");
 is($stopper->value_at(11), 1,  "stopper: after 11, value is 1");
 is($stopper->value_at(25), 10, "stopper: after 25, value stopped at 10");
 
-is($stopper->offset_for(0),  0, "stopper: we start at 0");
-is($stopper->offset_for(1), 11, "stopper: we reach 1 at 11");
+is($stopper->offset_for(0),   0, "stopper: we start at 0");
+is($stopper->offset_for(1),  11, "stopper: we reach 1 at 11");
+is($stopper->offset_for(10), 20, "stopper: we reach 10 at 20");
+is($stopper->offset_for(11), undef, "stopper: we never reach 11");
 
