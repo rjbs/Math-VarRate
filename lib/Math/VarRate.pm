@@ -23,7 +23,8 @@ have first been accumulated.
 
 Valid arguments to C<new> are:
 
-  rate_changes - a hashref in which keys are offsets and values are rates
+  rate_changes   - a hashref in which keys are offsets and values are rates
+  starting_value - the value at offset 0 (defaults to 0)
 
 =cut
 
@@ -60,8 +61,7 @@ sub _sanity_check_rate_changes {
 
 =method starting_value
 
-The starting value of the accumulator.  At present, it is fixed at zero and
-non-zero starting values have not been tested.
+This method returns the value of the accumulator at offset 0.
 
 =cut
 
