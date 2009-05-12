@@ -53,7 +53,7 @@ sub _sanity_check_rate_changes {
 
   while (my ($k, $v) = each %check) {
     Carp::confess("non-numeric $k are not allowed")
-      if grep { ! Scalar::Util::looks_like_number($_) } @$v;
+      if grep { ! Scalar::Util::looks_like_number("$_") } @$v;
     Carp::confess("negative $k are not allowed") if grep { $_ < 0 } @$v;
   }
 }
@@ -80,7 +80,7 @@ sub offset_for {
   my ($self, $value) = @_;
 
   Carp::croak("illegal value: non-numeric")
-    unless Scalar::Util::looks_like_number($value);
+    unless Scalar::Util::looks_like_number("$value");
 
   Carp::croak("illegal value: negative") unless $value >= 0;
 
@@ -116,7 +116,7 @@ sub value_at {
   my ($self, $offset) = @_;
 
   Carp::croak("illegal offset: non-numeric")
-    unless Scalar::Util::looks_like_number($offset);
+    unless Scalar::Util::looks_like_number("$offset");
 
   Carp::croak("illegal offset: negative") unless $offset >= 0;
 
