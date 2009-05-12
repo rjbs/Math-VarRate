@@ -31,7 +31,10 @@ sub new {
   my ($class, $arg) = @_;
 
   my $changes = $arg->{rate_changes} || {};
-  my $self = bless { rate_changes => $changes }  => $class;
+  my $self = bless {
+    rate_changes   => $changes,
+    starting_value => $arg->{starting_value} || 0,
+  } => $class;
 
   $self->_sanity_check_rate_changes;
   $self->_precompute_offsets;
@@ -62,7 +65,7 @@ non-zero starting values have not been tested.
 
 =cut
 
-sub starting_value { 0 }
+sub starting_value { $_[0]->{starting_value} || 0 }
 
 =method offset_for
 
@@ -87,6 +90,8 @@ sub offset_for {
 
   my $ko       = $self->{known_offsets};
   my ($offset) = sort { $b <=> $a } grep { $ko->{ $_ } < $value } keys %$ko;
+
+  return unless defined $offset;
 
   my $rate     = $self->{rate_changes}{ $offset };
 
