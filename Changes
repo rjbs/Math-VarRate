@@ -3,6 +3,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
           allow non-zero starting values
           change input validation to work with bigfloats
+          update bugtracker
 
 0.091310  2009-05-11
           first revision
