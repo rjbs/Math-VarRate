@@ -11,7 +11,7 @@ like($@, qr/negative offset/, "can't have a negative offset in rate changes");
 eval { Math::VarRate->new({ rate_changes => { 10 => -2 } }); };
 like($@, qr/negative rate/, "can't have a negative rate in rate changes");
 
-eval { Math::VarRate->new({ rate_changes => { 'ten' => -2 } }); };
+eval { Math::VarRate->new({ rate_changes => { 'ten' => 2 } }); };
 like($@, qr/non-numeric offset/, "can't have a non-numeric offset in rate_c");
 
 eval { Math::VarRate->new({ rate_changes => { 10 => 'neg two' } }); };
